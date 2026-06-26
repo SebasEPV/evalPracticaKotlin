@@ -14,30 +14,32 @@ fun main() {
     mostrarMenuTorneo()
 }
 
-    fun mostrarMenuTorneo() {
-        while (true) {
-            println("""
-            ===== SISTEMA DE TORNEOS =====
+fun mostrarMenuTorneo() {
+    while (true) {
+        println("""
+        ===== SISTEMA DE TORNEOS =====
 
-            1. Registrar participante
-            2. Registrar puntos
-            3. Consultar participante
-            4. Mostrar estadísticas del torneo
-            5. Finalizar programa
+        1. Registrar participante
+        2. Registrar puntos
+        3. Consultar participante
+        4. Mostrar estadísticas del torneo
+        5. Mostrar estadísticas avanzada del torneo
+        6. Finalizar programa
 
-            Seleccione una opción:
-        """.trimIndent())
+        Seleccione una opción:
+    """.trimIndent())
 
-            val resp = readln().toInt()
-            when(resp) {
-                1 -> registrarParticipante()
-                2 -> registrarPuntos()
-                3 -> consultarParticipante()
-                4 -> mostrarEstadisticasTorneo()
-                5 -> break
-            }
+        val resp = readln().toInt()
+        when(resp) {
+            1 -> registrarParticipante()
+            2 -> registrarPuntos()
+            3 -> consultarParticipante()
+            4 -> mostrarEstadisticasTorneo()
+            5 -> mostrarEstadisticaAvanzada()
+            6 -> break
         }
     }
+}
 fun registrarParticipante() {
     while (true) {
         println("""
@@ -71,6 +73,8 @@ fun registrarParticipante() {
     }
 }
 fun registrarPuntos() {
+    if (!validarParticipantes()) return
+
     while (true) {
         println("""
             =========================
@@ -113,6 +117,7 @@ fun registrarPuntos() {
     }
 }
 fun consultarParticipante() {
+    if (!validarParticipantes()) return
 
     while (true) {
         println(
@@ -160,12 +165,12 @@ fun buscarCategoria(total: Int): String {
     }
 }
 fun mostrarEstadisticasTorneo() {
-
     val totalParticipantes = participantes.size
     val totalPuntos = participantes.sumOf { it.second }
     val participanteMaxPts = participantes.maxBy { it.second }
     val participanteMinPts = participantes.minBy { it.second }
     val participanteCategorias = mutableListOf<Pair<String, String>>()
+
     for (i in 0..<participantes.size) {
         val categoria = buscarCategoria(participantes[i].second)
         participanteCategorias.add(participantes[i].first to categoria)
@@ -200,4 +205,28 @@ fun mostrarEstadisticasTorneo() {
         
         =========================  
     """.trimIndent())
+}
+fun mostrarEstadisticaAvanzada() {
+    if (!validarParticipantes()) return
+
+    val totalPuntos = participantes.sumOf { it.second }
+    val puntosPromedio = totalPuntos.toDouble() / participantes.size
+
+    val participantesMayorPromedio = participantes.filter { it.second > puntosPromedio }
+
+    println("Promedio: $puntosPromedio")
+    println("Participantes con más puntos que el promedio:")
+
+    participantesMayorPromedio.forEach {
+        println("${it.first}: ${it.second} puntos")
+    }
+}
+fun validarParticipantes(): Boolean {
+    if (!participantes.isEmpty()) return true
+    println("""
+            =========================
+
+            No hay participantes registrados.
+        """.trimIndent())
+    return false
 }
