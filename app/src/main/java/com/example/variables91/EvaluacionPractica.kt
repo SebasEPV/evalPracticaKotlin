@@ -214,9 +214,11 @@ fun mostrarEstadisticaAvanzada() {
 
     val participantesMayorPromedio = participantes.filter { it.second > puntosPromedio }
 
-    println("Promedio: $puntosPromedio")
-    println("Participantes con más puntos que el promedio:")
-
+    println("""
+        ===== ESTADISTICAS AVANZADAS DEL TORNEO =====
+        Promedio: $puntosPromedio
+        Participantes con más puntos que el promedio:
+    """.trimIndent())
     participantesMayorPromedio.forEach {
         println("${it.first}: ${it.second} puntos")
     }
